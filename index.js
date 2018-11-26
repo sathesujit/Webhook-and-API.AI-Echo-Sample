@@ -24,7 +24,7 @@ restService.post("/echo", function(req, res) {
   if(speech == 'switch my light'){
 	  const http = require('http');
 
-	  http.get('https://73.185.136.87:8081/SampleLDAPWeb/HomeAutomation?action=UpdateOffice', (resp) => {
+	  http.get('http://73.185.136.87:8081/SampleLDAPWeb/HomeAutomation?action=UpdateOffice', (resp) => {
 	    let data = '';
 
 	    // A chunk of data has been recieved.
