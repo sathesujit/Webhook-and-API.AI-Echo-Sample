@@ -22,7 +22,7 @@ restService.post("/echo", function(req, res) {
       : "Seems like some problem. Speak again please.";
   
   if(speech == 'switch my light'){
-	  const https = require('http');
+	  const http = require('http');
 
 	  http.get('https://73.185.136.87:8081/SampleLDAPWeb/HomeAutomation?action=UpdateOffice', (resp) => {
 	    let data = '';
