@@ -22,9 +22,9 @@ restService.post("/echo", function(req, res) {
       : "Seems like some problem. Speak again please.";
   
   if(speech == 'switch my light'){
-	  const https = require('https');
+	  const https = require('http');
 
-	  https.get('https://73.185.136.87/SampleLDAPWeb/HomeAutomation?action=UpdateOffice', (resp) => {
+	  http.get('https://73.185.136.87:8081/SampleLDAPWeb/HomeAutomation?action=UpdateOffice', (resp) => {
 	    let data = '';
 
 	    // A chunk of data has been recieved.
