@@ -20,11 +20,40 @@ restService.post("/echo", function(req, res) {
     req.body.result.parameters.echoText
       ? req.body.result.parameters.echoText
       : "Seems like some problem. Speak again please.";
-  return res.json({
-    speech: speech,
-    displayText: speech,
-    source: "webhook-echo-sample"
-  });
+  
+  if(speech == 'switch my light'){
+	  const https = require('https');
+
+	  https.get('https://73.185.136.87/SampleLDAPWeb/HomeAutomation?action=UpdateOffice', (resp) => {
+	    let data = '';
+
+	    // A chunk of data has been recieved.
+	    resp.on('data', (chunk) => {
+	      data += chunk;
+	    });
+
+	    // The whole response has been received. Print out the result.
+	    resp.on('end', () => {
+	      console.log(JSON.parse(data).explanation);
+	    });
+
+	  }).on("error", (err) => {
+	    console.log("Error: " + err.message);
+	  });
+	  
+	  return res.json({
+		    speech: "switched my light",
+		    displayText: "switched my light",
+		    source: "webhook-echo-sample"
+	  });
+	  
+  }else{
+	  return res.json({
+	    speech: speech,
+	    displayText: speech,
+	    source: "webhook-echo-sample"
+	  });
+  }
 });
 
 restService.post("/audio", function(req, res) {
