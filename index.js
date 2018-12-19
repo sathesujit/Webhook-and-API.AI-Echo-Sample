@@ -17,7 +17,7 @@ var myDesiredTemp = '0';
 var myThermostatName = 'no name';
 
 
-var access_token = 'egLlQtEYOrRJIZyoy3D5c0aFTnyWUtnb';
+var access_token = '';
 var refresh_token = '';
 
 
@@ -32,6 +32,10 @@ restService.post("/echo", function(req, res) {
   if(speech.indexOf('thermostat') >= 0 && speech.indexOf('status') >= 0 ){
   
 	  var request = require('request');
+	  var apikey = req.body.result.parameters.mykey;
+	  console.log("apikey:"+apikey);
+	  var accesskey = req.body.result.parameters.accesskey;
+	  console.log("accesskey:"+accesskey);
 	  
 	  var options = {
 			  //url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeEquipmentStatus":true}}',
@@ -43,8 +47,7 @@ restService.post("/echo", function(req, res) {
 	  };
 			 
 	  function callback(error, response, body) {
-		  var apikey = req.body.result.parameters.mykey;
-		  console.log("apikey:"+apikey);
+		  
 		  if(response.statusCode == 500){
 			  
 			  var request = require('request');
