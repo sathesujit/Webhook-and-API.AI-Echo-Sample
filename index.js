@@ -16,8 +16,16 @@ var myActualTemp = '0';
 var myDesiredTemp = '0';
 var myThermostatName = 'no name';
 var furnaceStatus = '';
+
 var accesskey = ''; 
-var refresh_token = '';
+var fs = require('fs');
+
+var accesskey = fs.readFileSync('access_key', 'utf8');
+console.log("accesskey from file:"+accesskey);
+
+var refresh_token = fs.readFileSync('refresh_token', 'utf8');
+console.log("refresh_token from file:"+refresh_token);
+
 
 restService.post("/echo", function(req, res) {
   var speech =
@@ -72,7 +80,16 @@ restService.post("/echo", function(req, res) {
 				  accesskey = info.access_token;
 				  console.log("new accesskey:"+accesskey);
 				  
+				  fs.writeFile('access_key', accesskey, function(err, accesskey){
+					    if (err) console.log(err);
+					    console.log("Successfully Written to access_key File.");
+				  });
+				  
 				  refresh_token = info.refresh_token;
+				  fs.writeFile('refresh_token', refresh_token, function(err, refresh_token){
+					    if (err) console.log(err);
+					    console.log("Successfully Written to refresh_token File.");
+				  });
 				  console.log("new refresh_token:"+refresh_token);
 				  
 				  var options = {
@@ -111,7 +128,9 @@ restService.post("/echo", function(req, res) {
 							    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
 							    				"The temperature is set to "+myDesiredTemp+" degrees faranhite." +
 							    						respFurnaceStatus,
-							    displayText: "checked my thermostat",
+							    displayText: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
+			    				"The temperature is set to "+myDesiredTemp+" degrees faranhite." +
+	    						respFurnaceStatus,
 							    source: "webhook-echo-sample"
 						  });
 					  }
@@ -150,7 +169,9 @@ restService.post("/echo", function(req, res) {
 				    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
 				    		"	The temperature is set to "+myDesiredTemp+" degrees faranhite." +
 				    				respFurnaceStatus,
-				    displayText: "checked my thermostat",
+				    displayText: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
+		    		"	The temperature is set to "+myDesiredTemp+" degrees faranhite." +
+    				respFurnaceStatus,
 				    source: "webhook-echo-sample"
 			  });
 		  }
