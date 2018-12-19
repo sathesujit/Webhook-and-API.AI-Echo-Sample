@@ -16,7 +16,7 @@ var myActualTemp = '0';
 var myDesiredTemp = '0';
 var myThermostatName = 'no name';
 
-var api_Key = 'VI1clMiLr7DLItlEwAuri0VVogiY3uvS';
+
 var access_token = '';
 var refresh_token = 'TfnoAgYHih3pyNS4aAeomfMQBeoPN5V0';
 
@@ -43,10 +43,12 @@ restService.post("/echo", function(req, res) {
 	  };
 			 
 	  function callback(error, response, body) {
+		  var apikey = req.body.result.parameters.mykey;
+		  console.log("apikey:"+apikey);
 		  if(response.statusCode == 500){
-
+			  
 			  var request = require('request');
-			  var url = encodeURIComponent('refresh_token&code='+refresh_token+'&client_id='+apiKey);
+			  var url = encodeURIComponent('refresh_token&code='+refresh_token+'&client_id='+apikey);
 			  request.post({
 			    headers: {'content-type' : 'text/json'},
 			    url: 'https://api.ecobee.com/token?grant_type='+url
