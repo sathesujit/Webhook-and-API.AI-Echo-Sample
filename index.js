@@ -15,6 +15,7 @@ restService.use(bodyParser.json());
 var myActualTemp = '0';
 var myDesiredTemp = '0';
 var myThermostatName = 'no name';
+var furnaceStatus = '';
 var accesskey = ''; 
 var refresh_token = '';
 
@@ -43,7 +44,7 @@ restService.post("/echo", function(req, res) {
 	  
 	  var options = {
 			  //url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeEquipmentStatus":true}}',
-			  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true}}',
+			  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true,"includeEquipmentStatus":true}}',
 			  headers: {
 			    'Content-Type': 'text/json',
 			    'Authorization': 'Bearer '+accesskey
@@ -76,7 +77,7 @@ restService.post("/echo", function(req, res) {
 				  
 				  var options = {
 						  //url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeEquipmentStatus":true}}',
-						  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true}}',
+						  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true,"includeEquipmentStatus":true}}',
 						  headers: {
 						    'Content-Type': 'text/json',
 						    'Authorization': 'Bearer '+accesskey
@@ -91,13 +92,25 @@ restService.post("/echo", function(req, res) {
 						  console.log("actualTemp:"+info.thermostatList[0].runtime.actualTemperature);
 						  console.log("desiredTemp:"+info.thermostatList[0].runtime.desiredHeat);
 						  console.log(info.thermostatList[0].name);
+						  console.log("equipmentStatus:"+info.thermostatList[0].equipmentStatus);
 						  
 						  myDesiredTemp = (info.thermostatList[0].runtime.desiredHeat)/10;
 						  myActualTemp = (info.thermostatList[0].runtime.actualTemperature)/10;
 						  myThermostatName = info.thermostatList[0].name; 
+						  
+						  furnaceStatus = info.thermostatList[0].equipmentStatus;
+						  var respFurnaceStatus = ''; 
+						  if(furnaceStatus == ''){
+							  
+						  }else{
+							  respFurnaceStatus = "The furnace is currently switched ON and heating.";
+						  }
+						  
 						  //console.log(info.forks_count + " Forks");
 						  return res.json({
-							    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. The temperature is set to "+myDesiredTemp+" degrees faranhite.",
+							    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
+							    				"The temperature is set to "+myDesiredTemp+" degrees faranhite." +
+							    						respFurnaceStatus,
 							    displayText: "checked my thermostat",
 							    source: "webhook-echo-sample"
 						  });
@@ -122,10 +135,21 @@ restService.post("/echo", function(req, res) {
 			  
 			  myDesiredTemp = (info.thermostatList[0].runtime.desiredHeat)/10;
 			  myActualTemp = (info.thermostatList[0].runtime.actualTemperature)/10;
-			  myThermostatName = info.thermostatList[0].name; 
+			  myThermostatName = info.thermostatList[0].name;
+			  
+			  console.log("equipmentStatus:"+info.thermostatList[0].equipmentStatus);
+			  furnaceStatus = info.thermostatList[0].equipmentStatus;
+			  var respFurnaceStatus = ''; 
+			  if(furnaceStatus == ''){
+				  
+			  }else{
+				  respFurnaceStatus = "The furnace is currently switched ON and heating.";
+			  }
 			  //console.log(info.forks_count + " Forks");
 			  return res.json({
-				    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. The temperature is set to "+myDesiredTemp+" degrees faranhite.",
+				    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
+				    		"	The temperature is set to "+myDesiredTemp+" degrees faranhite." +
+				    				respFurnaceStatus,
 				    displayText: "checked my thermostat",
 				    source: "webhook-echo-sample"
 			  });
