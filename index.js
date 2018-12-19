@@ -17,8 +17,8 @@ var myDesiredTemp = '0';
 var myThermostatName = 'no name';
 
 
-var access_token = '';
-var refresh_token = 'TfnoAgYHih3pyNS4aAeomfMQBeoPN5V0';
+var access_token = 'egLlQtEYOrRJIZyoy3D5c0aFTnyWUtnb';
+var refresh_token = '';
 
 
 restService.post("/echo", function(req, res) {
@@ -38,7 +38,7 @@ restService.post("/echo", function(req, res) {
 			  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true}}',
 			  headers: {
 			    'Content-Type': 'text/json',
-			    'Authorization': 'Bearer sprp1YmVkOte20SovU0GYOcpoHgenUDC'
+			    'Authorization': 'Bearer '+access_token
 			  }
 	  };
 			 
