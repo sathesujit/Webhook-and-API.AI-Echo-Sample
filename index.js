@@ -16,7 +16,7 @@ var myActualTemp = '0';
 var myDesiredTemp = '0';
 var myThermostatName = 'no name';
 var accesskey = ''; 
-var refreshToken = '';
+var refresh_token = '';
 
 restService.post("/echo", function(req, res) {
   var speech =
