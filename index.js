@@ -101,7 +101,7 @@ restService.post("/echo", function(req, res) {
 						  furnaceStatus = info.thermostatList[0].equipmentStatus;
 						  var respFurnaceStatus = ''; 
 						  if(furnaceStatus == ''){
-							  
+							  respFurnaceStatus = "The furnace is currently switched Off and not heating.";
 						  }else{
 							  respFurnaceStatus = "The furnace is currently switched ON and heating.";
 						  }
@@ -141,7 +141,7 @@ restService.post("/echo", function(req, res) {
 			  furnaceStatus = info.thermostatList[0].equipmentStatus;
 			  var respFurnaceStatus = ''; 
 			  if(furnaceStatus == ''){
-				  
+				  respFurnaceStatus = "The furnace is currently switched Off and not heating.";
 			  }else{
 				  respFurnaceStatus = "The furnace is currently switched ON and heating.";
 			  }
