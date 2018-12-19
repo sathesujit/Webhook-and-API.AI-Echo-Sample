@@ -15,11 +15,8 @@ restService.use(bodyParser.json());
 var myActualTemp = '0';
 var myDesiredTemp = '0';
 var myThermostatName = 'no name';
-
-
-var access_token = '';
-var refresh_token = '';
-
+var accesskey = ''; 
+var refreshToken = '';
 
 restService.post("/echo", function(req, res) {
   var speech =
@@ -34,31 +31,82 @@ restService.post("/echo", function(req, res) {
 	  var request = require('request');
 	  var apikey = req.body.result.parameters.mykey;
 	  console.log("apikey:"+apikey);
-	  var accesskey = req.body.result.parameters.accesskey;
+	  
 	  console.log("accesskey:"+accesskey);
+	  
+	  console.log("refresh_token:"+refresh_token);
+	  if(refresh_token ==''){
+		  refresh_token = req.body.result.parameters.refreshtoken;
+		  console.log("refresh_token from request:"+refresh_token);
+	  } 
+	  
 	  
 	  var options = {
 			  //url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeEquipmentStatus":true}}',
 			  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true}}',
 			  headers: {
 			    'Content-Type': 'text/json',
-			    'Authorization': 'Bearer '+access_token
+			    'Authorization': 'Bearer '+accesskey
 			  }
 	  };
 			 
 	  function callback(error, response, body) {
 		  
 		  if(response.statusCode == 500){
+			  console.log("Looks like authentication has expired. trying to get new refresh token and access token.");
+			  var options = {
+					  uri: 'https://api.ecobee.com/token?grant_type=refresh_token&code='+refresh_token+'&client_id='+apikey,
+					  method: 'POST',
+					  
+			  };
 			  
-			  var request = require('request');
-			  var url = encodeURIComponent('refresh_token&code='+refresh_token+'&client_id='+apikey);
-			  request.post({
-			    headers: {'content-type' : 'text/json'},
-			    url: 'https://api.ecobee.com/token?grant_type='+url
-			    //body:    "mes=heydude"
-			  }, function(error, response, body){
-			    console.log(body);
-			  });
+			  
+			  function callback(error, response, body) {
+				  var info = JSON.parse(body);
+				  console.log("body of refreshtoken response:"+body);
+				  
+				  accesskey = info.access_token;
+				  console.log("new accesskey:"+accesskey);
+				  
+				  refresh_token = info.refresh_token;
+				  console.log("new refresh_token:"+accesskey);
+				  
+				  var options = {
+						  //url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeEquipmentStatus":true}}',
+						  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true}}',
+						  headers: {
+						    'Content-Type': 'text/json',
+						    'Authorization': 'Bearer '+accesskey
+						  }
+				  };
+				  
+				  function callback(error, response, body) {
+					  if (!error && response.statusCode == 200) {
+						  var info = JSON.parse(body);
+						  console.log("body:"+body);
+						  console.log("name:"+info.thermostatList[0].name);
+						  console.log("actualTemp:"+info.thermostatList[0].runtime.actualTemperature);
+						  console.log("desiredTemp:"+info.thermostatList[0].runtime.desiredHeat);
+						  console.log(info.thermostatList[0].name);
+						  
+						  myDesiredTemp = (info.thermostatList[0].runtime.desiredHeat)/10;
+						  myActualTemp = (info.thermostatList[0].runtime.actualTemperature)/10;
+						  myThermostatName = info.thermostatList[0].name; 
+						  //console.log(info.forks_count + " Forks");
+						  return res.json({
+							    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. The temperature is set to "+myDesiredTemp+" degrees faranhite.",
+							    displayText: "checked my thermostat",
+							    source: "webhook-echo-sample"
+						  });
+					  }
+					  
+					  
+				  }
+				  request(options, callback);	  
+			  }
+			  request(options, callback);	  
+			  
+			  
 			  			  
 			  
 		  }else if (!error && response.statusCode == 200) {
@@ -73,13 +121,14 @@ restService.post("/echo", function(req, res) {
 			  myActualTemp = (info.thermostatList[0].runtime.actualTemperature)/10;
 			  myThermostatName = info.thermostatList[0].name; 
 			  //console.log(info.forks_count + " Forks");
+			  return res.json({
+				    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. The temperature is set to "+myDesiredTemp+" degrees faranhite.",
+				    displayText: "checked my thermostat",
+				    source: "webhook-echo-sample"
+			  });
 		  }
 		  
-		  return res.json({
-			    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. The temperature is set to "+myDesiredTemp+" degrees faranhite.",
-			    displayText: "checked my thermostat",
-			    source: "webhook-echo-sample"
-		  });
+		  
 	  }
 			 
 	  request(options, callback);	  
