@@ -54,6 +54,9 @@ restService.post("/echo", function(req, res) {
 		  
 		  if(response.statusCode == 500){
 			  console.log("Looks like authentication has expired. trying to get new refresh token and access token.");
+			  console.log("refresh_token:"+refresh_token);
+			  console.log("apikey:"+apikey);
+			  
 			  var options = {
 					  uri: 'https://api.ecobee.com/token?grant_type=refresh_token&code='+refresh_token+'&client_id='+apikey,
 					  method: 'POST',
@@ -69,7 +72,7 @@ restService.post("/echo", function(req, res) {
 				  console.log("new accesskey:"+accesskey);
 				  
 				  refresh_token = info.refresh_token;
-				  console.log("new refresh_token:"+accesskey);
+				  console.log("new refresh_token:"+refresh_token);
 				  
 				  var options = {
 						  //url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeEquipmentStatus":true}}',
