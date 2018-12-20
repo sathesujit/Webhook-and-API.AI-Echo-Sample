@@ -32,6 +32,15 @@ function refreshTimerStart(){
 var apikey = '';
 var request = require('request');
 
+
+
+var httpPing = require("http");
+setInterval(function() {
+	 console.log("keeping alive");
+	httpPing.get("https://echo-service10.herokuapp.com/echo");
+}, 300000); // every 5 minutes (300000)
+
+
 function refreshKeys(){
 	
 	  console.log("refreshKeys start");
