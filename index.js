@@ -47,7 +47,7 @@ function refreshKeys(){
 	
 	  console.log("refreshKeys start");
 	  console.log("refresh_token:"+refresh_token);
-	  console.log("apikey:"+apikey);
+	  //console.log("apikey:"+apikey);
 	  
 	  var options = {
 			  uri: 'https://api.ecobee.com/token?grant_type=refresh_token&code='+refresh_token+'&client_id='+apikey,
@@ -80,7 +80,7 @@ restService.post("/echo", function(req, res) {
   
 	  
 	  apikey = req.body.result.parameters.mykey;
-	  console.log("apikey:"+apikey);
+	  //console.log("apikey:"+apikey);
 
 	  console.log("accesskey:"+accesskey);
 	  console.log("refresh_token:"+refresh_token);
