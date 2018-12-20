@@ -27,7 +27,7 @@ console.log("refresh_token:"+refresh_token);
 
 var refreshTimer = null;
 function refreshTimerStart(){
-	refreshTimer = setInterval(function(){refreshKeys()} , 600000);
+	refreshTimer = setInterval(function(){refreshKeys()} , 1800000);
 }
 var apikey = '';
 var request = require('request');
