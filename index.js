@@ -17,15 +17,45 @@ var myDesiredTemp = '0';
 var myThermostatName = 'no name';
 var furnaceStatus = '';
 
-var accesskey = ''; 
 var fs = require('fs');
 
-var accesskey = fs.readFileSync('access_key', 'utf8');
-console.log("accesskey from file:"+accesskey);
+var accesskey = '';
+console.log("accesskey:"+accesskey);
 
-var refresh_token = fs.readFileSync('refresh_token', 'utf8');
-console.log("refresh_token from file:"+refresh_token);
+var refresh_token = '';
+console.log("refresh_token:"+refresh_token);
 
+var refreshTimer = null;
+function refreshTimerStart(){
+	refreshTimer = setInterval(function(){refreshKeys()} , 600000);
+}
+var apikey = '';
+var request = require('request');
+
+function refreshKeys(){
+	
+	  console.log("refreshKeys start");
+	  console.log("refresh_token:"+refresh_token);
+	  console.log("apikey:"+apikey);
+	  
+	  var options = {
+			  uri: 'https://api.ecobee.com/token?grant_type=refresh_token&code='+refresh_token+'&client_id='+apikey,
+			  method: 'POST',
+			  
+	  };	  
+	  
+	  function callback(error, response, body) {
+		  var info = JSON.parse(body);
+		  console.log("body of refreshtoken response:"+body);
+		  
+		  accesskey = info.access_token;
+		  console.log("new accesskey:"+accesskey);
+		  
+		  refresh_token = info.refresh_token;
+		  console.log("new refresh_token:"+refresh_token);
+	  }
+	  request(options, callback);	  
+}
 
 restService.post("/echo", function(req, res) {
   var speech =
@@ -37,155 +67,94 @@ restService.post("/echo", function(req, res) {
   
   if(speech.indexOf('thermostat') >= 0 && speech.indexOf('status') >= 0 ){
   
-	  var request = require('request');
-	  var apikey = req.body.result.parameters.mykey;
+	  
+	  apikey = req.body.result.parameters.mykey;
 	  console.log("apikey:"+apikey);
-	  
+
 	  console.log("accesskey:"+accesskey);
-	  
 	  console.log("refresh_token:"+refresh_token);
+	  
 	  if(refresh_token ==''){
 		  refresh_token = req.body.result.parameters.refreshtoken;
 		  console.log("refresh_token from request:"+refresh_token);
-	  } 
-	  
-	  
-	  var options = {
-			  //url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeEquipmentStatus":true}}',
-			  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true,"includeEquipmentStatus":true}}',
-			  headers: {
-			    'Content-Type': 'text/json',
-			    'Authorization': 'Bearer '+accesskey
-			  }
-	  };
-			 
-	  function callback(error, response, body) {
+		  refreshKeys();
+		  refreshTimerStart();
 		  
-		  if(response.statusCode == 500){
-			  console.log("Looks like authentication has expired. trying to get new refresh token and access token.");
-			  console.log("refresh_token:"+refresh_token);
-			  console.log("apikey:"+apikey);
-			  
-			  var options = {
-					  uri: 'https://api.ecobee.com/token?grant_type=refresh_token&code='+refresh_token+'&client_id='+apikey,
-					  method: 'POST',
-					  
-			  };
-			  
-			  
-			  function callback(error, response, body) {
-				  var info = JSON.parse(body);
-				  console.log("body of refreshtoken response:"+body);
-				  
-				  accesskey = info.access_token;
-				  console.log("new accesskey:"+accesskey);
-				  
-				  fs.writeFile('access_key', accesskey, function(err, accesskey){
-					    if (err) console.log(err);
-					    console.log("Successfully Written to access_key File.");
-				  });
-				  
-				  refresh_token = info.refresh_token;
-				  fs.writeFile('refresh_token', refresh_token, function(err, refresh_token){
-					    if (err) console.log(err);
-					    console.log("Successfully Written to refresh_token File.");
-				  });
-				  console.log("new refresh_token:"+refresh_token);
-				  
-				  var options = {
-						  //url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeEquipmentStatus":true}}',
-						  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true,"includeEquipmentStatus":true}}',
-						  headers: {
-						    'Content-Type': 'text/json',
-						    'Authorization': 'Bearer '+accesskey
-						  }
-				  };
-				  
-				  function callback(error, response, body) {
-					  if (!error && response.statusCode == 200) {
-						  var info = JSON.parse(body);
-						  console.log("body:"+body);
-						  console.log("name:"+info.thermostatList[0].name);
-						  console.log("actualTemp:"+info.thermostatList[0].runtime.actualTemperature);
-						  console.log("desiredTemp:"+info.thermostatList[0].runtime.desiredHeat);
-						  console.log(info.thermostatList[0].name);
-						  console.log("equipmentStatus:"+info.thermostatList[0].equipmentStatus);
-						  
-						  myDesiredTemp = (info.thermostatList[0].runtime.desiredHeat)/10;
-						  myActualTemp = (info.thermostatList[0].runtime.actualTemperature)/10;
-						  myThermostatName = info.thermostatList[0].name; 
-						  
-						  furnaceStatus = info.thermostatList[0].equipmentStatus;
-						  var respFurnaceStatus = ''; 
-						  if(furnaceStatus == ''){
-							  respFurnaceStatus = "The furnace is currently switched Off and not heating.";
-						  }else{
-							  respFurnaceStatus = "The furnace is currently switched ON and heating.";
-						  }
-						  
-						  //console.log(info.forks_count + " Forks");
-						  return res.json({
-							    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
-							    				"The temperature is set to "+myDesiredTemp+" degrees faranhite." +
-							    						respFurnaceStatus,
-							    displayText: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
-			    				"The temperature is set to "+myDesiredTemp+" degrees faranhite." +
-	    						respFurnaceStatus,
-							    source: "webhook-echo-sample"
-						  });
-					  }
-					  
-					  
+		  return res.json({
+			    speech: "check again",
+			    displayText: "check again",
+			    source: "webhook-echo-sample"
+		  });
+	  } else{
+	  
+		  console.log("calling thermostat with accesskey:"+accesskey);
+		  var options = {
+				  //url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeEquipmentStatus":true}}',
+				  url: 'https://api.ecobee.com/1/thermostat?format=json&body={"selection":{"selectionType":"registered","selectionMatch":"","includeRuntime":true,"includeEquipmentStatus":true}}',
+				  headers: {
+				    'Content-Type': 'text/json',
+				    'Authorization': 'Bearer '+accesskey
 				  }
-				  request(options, callback);	  
+		  };
+				 
+		  function callback(error, response, body) {
+			  
+			  if(response.statusCode == 500){
+				  console.log("Looks like authentication has expired. trying to get new refresh token and access token.");
+	
+				  
+				  return res.json({
+					    speech: "check again",
+					    displayText: "check again",
+					    source: "webhook-echo-sample"
+				  });
+				  			  
+				  
+			  }else if (!error && response.statusCode == 200) {
+				  console.log("body:"+body);
+				  
+				  var info = JSON.parse(body);
+				  
+				  console.log("name:"+info.thermostatList[0].name);
+				  console.log("actualTemp:"+info.thermostatList[0].runtime.actualTemperature);
+				  console.log("desiredTemp:"+info.thermostatList[0].runtime.desiredHeat);
+				  console.log(info.thermostatList[0].name);
+				  
+				  myDesiredTemp = (info.thermostatList[0].runtime.desiredHeat)/10;
+				  myActualTemp = (info.thermostatList[0].runtime.actualTemperature)/10;
+				  myThermostatName = info.thermostatList[0].name;
+				  
+				  console.log("equipmentStatus:"+info.thermostatList[0].equipmentStatus);
+				  furnaceStatus = info.thermostatList[0].equipmentStatus;
+				  var respFurnaceStatus = ''; 
+				  if(furnaceStatus == ''){
+					  respFurnaceStatus = "The furnace is currently switched Off and not heating.";
+				  }else{
+					  respFurnaceStatus = "The furnace is currently switched ON and heating.";
+				  }
+				  //console.log(info.forks_count + " Forks");
+				  return res.json({
+					    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
+					    		"	The temperature is set to "+myDesiredTemp+" degrees faranhite." +
+					    				respFurnaceStatus,
+					    displayText: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
+			    		"	The temperature is set to "+myDesiredTemp+" degrees faranhite." +
+	    				respFurnaceStatus,
+					    source: "webhook-echo-sample"
+				  });
 			  }
-			  request(options, callback);	  
 			  
 			  
-			  			  
-			  
-		  }else if (!error && response.statusCode == 200) {
-			  var info = JSON.parse(body);
-			  console.log("body:"+body);
-			  console.log("name:"+info.thermostatList[0].name);
-			  console.log("actualTemp:"+info.thermostatList[0].runtime.actualTemperature);
-			  console.log("desiredTemp:"+info.thermostatList[0].runtime.desiredHeat);
-			  console.log(info.thermostatList[0].name);
-			  
-			  myDesiredTemp = (info.thermostatList[0].runtime.desiredHeat)/10;
-			  myActualTemp = (info.thermostatList[0].runtime.actualTemperature)/10;
-			  myThermostatName = info.thermostatList[0].name;
-			  
-			  console.log("equipmentStatus:"+info.thermostatList[0].equipmentStatus);
-			  furnaceStatus = info.thermostatList[0].equipmentStatus;
-			  var respFurnaceStatus = ''; 
-			  if(furnaceStatus == ''){
-				  respFurnaceStatus = "The furnace is currently switched Off and not heating.";
-			  }else{
-				  respFurnaceStatus = "The furnace is currently switched ON and heating.";
-			  }
-			  //console.log(info.forks_count + " Forks");
-			  return res.json({
-				    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
-				    		"	The temperature is set to "+myDesiredTemp+" degrees faranhite." +
-				    				respFurnaceStatus,
-				    displayText: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. " +
-		    		"	The temperature is set to "+myDesiredTemp+" degrees faranhite." +
-    				respFurnaceStatus,
-				    source: "webhook-echo-sample"
-			  });
 		  }
+				 
+		  request(options, callback);	  
 		  
-		  
+	//	  return res.json({
+	//		    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. The temperature is set to "+myActualTemp+" degrees faranhite.",
+	//		    displayText: "checked my thermostat",
+	//		    source: "webhook-echo-sample"
+	//	  });
 	  }
-			 
-	  request(options, callback);	  
-	  
-//	  return res.json({
-//		    speech: "I checked your thermostat. The current temperature is "+myActualTemp+" degrees faranhite. The temperature is set to "+myActualTemp+" degrees faranhite.",
-//		    displayText: "checked my thermostat",
-//		    source: "webhook-echo-sample"
-//	  });
 	  
   }else if(speech == 'switch my light'){
 	  const http = require('http');
