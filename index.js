@@ -182,11 +182,11 @@ restService.post("/echo", function(req, res) {
 	    resp.on('end', () => {
 	      console.log("end:"+JSON.parse(data));
 	      
-//	      return res.json({
-//			    speech: "switched my light",
-//			    displayText: "switched my light",
-//			    source: "webhook-echo-sample"
-//		  });
+	      return res.json({
+			    speech: "switched my light",
+			    displayText: "switched my light",
+			    source: "webhook-echo-sample"
+		  });
 //	      
 	    });
 	    
