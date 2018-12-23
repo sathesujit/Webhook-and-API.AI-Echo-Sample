@@ -32,14 +32,14 @@ function refreshTimerStart(){
 var apikey = '';
 var request = require('request');
 
-setInterval(function() {
-	 console.log("keeping alive");
-	 request('https://echo-service10.herokuapp.com/echo', function (error, response, body) {
-	  //if (!error && response.statusCode == 200) {
-		 console.log(body);
-	  //}
-	});
-}, 300000); // every 5 minutes (300000)
+//setInterval(function() {
+//	 console.log("keeping alive");
+//	 request('https://echo-service10.herokuapp.com/echo', function (error, response, body) {
+//	  //if (!error && response.statusCode == 200) {
+//		 console.log(body);
+//	  //}
+//	});
+//}, 300000); // every 5 minutes (300000)
 
 
 
@@ -50,7 +50,7 @@ function refreshKeys(){
 	  //console.log("apikey:"+apikey);
 	  
 	  var options = {
-			  uri: 'https://api.ecobee.com/token?grant_type=refresh_token&code='+refresh_token+'&client_id='+apikey,
+			  uri: 'http://73.185.136.87:8081/SampleLDAPWeb/HomeAutomation?action=refreshKeys',
 			  method: 'POST',
 			  
 	  };	  
@@ -86,8 +86,8 @@ restService.post("/echo", function(req, res) {
 	  console.log("refresh_token:"+refresh_token);
 	  
 	  if(refresh_token ==''){
-		  refresh_token = req.body.result.parameters.refreshtoken;
-		  console.log("refresh_token from request:"+refresh_token);
+		  //refresh_token = req.body.result.parameters.refreshtoken;
+		  //console.log("refresh_token from request:"+refresh_token);
 		  refreshKeys();
 		  refreshTimerStart();
 		  
