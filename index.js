@@ -181,17 +181,21 @@ restService.post("/echo", function(req, res) {
 	    // The whole response has been received. Print out the result.
 	    resp.on('end', () => {
 	      console.log(JSON.parse(data));
+	      
+	      return res.json({
+			    speech: "switched my light",
+			    displayText: "switched my light",
+			    source: "webhook-echo-sample"
+		  });
+	      
 	    });
+	    
 
 	  }).on("error", (err) => {
 	    console.log("Error: " + err.message);
 	  });
 	  
-	  return res.json({
-		    speech: "switched my light",
-		    displayText: "switched my light",
-		    source: "webhook-echo-sample"
-	  });
+	  
 	  
   }else{
 	  return res.json({
