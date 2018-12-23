@@ -180,14 +180,14 @@ restService.post("/echo", function(req, res) {
 
 	    // The whole response has been received. Print out the result.
 	    resp.on('end', () => {
-	      console.log(JSON.parse(data));
+	      console.log("end:"+JSON.parse(data));
 	      
-	      return res.json({
-			    speech: "switched my light",
-			    displayText: "switched my light",
-			    source: "webhook-echo-sample"
-		  });
-	      
+//	      return res.json({
+//			    speech: "switched my light",
+//			    displayText: "switched my light",
+//			    source: "webhook-echo-sample"
+//		  });
+//	      
 	    });
 	    
 
