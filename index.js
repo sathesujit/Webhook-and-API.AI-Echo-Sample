@@ -172,7 +172,7 @@ restService.post("/echo", function(req, res) {
   }else if(speech == 'switch my light'){
 	  
 	  const http = require('http');
-	  console.log("process.env.myID:"+process.env.myID);
+	  console.log("using id:"+process.env.myID);
 	  var options = {
 			   host: '73.185.136.87',
 			   port: 8081,
