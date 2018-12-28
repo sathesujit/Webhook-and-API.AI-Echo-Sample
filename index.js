@@ -124,7 +124,7 @@ restService.post("/echo", function(req, res) {
 				  			  
 				  
 			  }else if (!error && response.statusCode == 200) {
-				  console.log("body:"+body);
+				  //console.log("body:"+body);
 				  
 				  var info = JSON.parse(body);
 				  
