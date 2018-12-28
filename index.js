@@ -52,7 +52,9 @@ function refreshKeys(){
 	  var options = {
 			  uri: 'http://73.185.136.87:8081/SampleLDAPWeb/HomeAutomation?action=refreshKeys',
 			  method: 'POST',
-			  
+			  headers: {
+			      'Authorization': 'Basic ' + new Buffer(process.env.myID + ':' + process.env.myPW).toString('base64')
+			   }
 	  };	  
 	  
 	  function callback(error, response, body) {
@@ -168,9 +170,41 @@ restService.post("/echo", function(req, res) {
 	  }
 	  
   }else if(speech == 'switch my light'){
+	  
 	  const http = require('http');
+	  console.log("process.env.myID:"+process.env.myID);
+	  var options = {
+			   host: '73.185.136.87',
+			   port: 8081,
+			   path: '/SampleLDAPWeb/HomeAutomation?action=UpdateOffice',
+			   // authentication headers
+			   headers: {
+			      'Authorization': 'Basic ' + new Buffer(process.env.myID + ':' + process.env.myPW).toString('base64')
+			   }   
+			};
+			//this is the call
+//			request = http.get(options, function(res){
+//			   var body = "";
+//			   res.on('data', function(data) {
+//			      body += data;
+//			   });
+//			   res.on('end', function() {
+//			    //here we have the full response, html or json object
+//			      console.log(body);
+//			   })
+//			   res.on('error', function(e) {
+//			      onsole.log("Got error: " + e.message);
+//			   });
+//			});
+			
+	  
+	  
+	  
+	  
+	  
+	  //*****************************Working NON BASIC AUTH CODE START ************************
 
-	  http.get('http://73.185.136.87:8081/SampleLDAPWeb/HomeAutomation?action=UpdateOffice', (resp) => {
+	  http.get(options, (resp) => {
 	    let data = '';
 
 	    // A chunk of data has been recieved.
@@ -180,11 +214,14 @@ restService.post("/echo", function(req, res) {
 
 	    // The whole response has been received. Print out the result.
 	    resp.on('end', () => {
-	      console.log("end:"+JSON.parse(data));
-	      
+	      //console.log("end:"+JSON.parse(data));
+	      //var  
+	      console.log("received from server:"+data);
+	      var jsonData= JSON.parse(data);
+	      console.log("received from server displayText:"+jsonData.displayText);
 	      return res.json({
-			    speech: "switched my light",
-			    displayText: "switched my light",
+			    speech: jsonData.speech,
+			    displayText: jsonData.displayText,
 			    source: "webhook-echo-sample"
 		  });
 //	      
@@ -195,6 +232,7 @@ restService.post("/echo", function(req, res) {
 	    console.log("Error: " + err.message);
 	  });
 	  
+	  //*****************************Working NON BASIC AUTH CODE END ************************
 	  
 	  
   }else{
