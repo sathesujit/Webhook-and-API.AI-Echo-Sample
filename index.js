@@ -235,6 +235,78 @@ restService.post("/echo", function(req, res) {
 	  //*****************************Working NON BASIC AUTH CODE END ************************
 	  
 	  
+  }else if(speech == 'switch on my porch light' || speech == 'switch off my porch light'){
+	  
+	  const http = require('http');
+	  console.log("using id:"+process.env.myID);
+	  var path='';
+	  if(speech == 'switch on my porch light' || speech == 'switch off my porch light'){
+		  path= '/SampleLDAPWeb/HomeAutomation?action=PorchON';
+	  }else{
+		  path= '/SampleLDAPWeb/HomeAutomation?action=PorchOFF';
+	  }
+	  var options = {
+			   host: '73.185.136.87',
+			   port: 8081,
+			   path: path,
+			   // authentication headers
+			   headers: {
+			      'Authorization': 'Basic ' + new Buffer(process.env.myID + ':' + process.env.myPW).toString('base64')
+			   }   
+			};
+			//this is the call
+//			request = http.get(options, function(res){
+//			   var body = "";
+//			   res.on('data', function(data) {
+//			      body += data;
+//			   });
+//			   res.on('end', function() {
+//			    //here we have the full response, html or json object
+//			      console.log(body);
+//			   })
+//			   res.on('error', function(e) {
+//			      onsole.log("Got error: " + e.message);
+//			   });
+//			});
+			
+	  
+	  
+	  
+	  
+	  
+	  //*****************************Working NON BASIC AUTH CODE START ************************
+
+	  http.get(options, (resp) => {
+	    let data = '';
+
+	    // A chunk of data has been recieved.
+	    resp.on('data', (chunk) => {
+	      data += chunk;
+	    });
+
+	    // The whole response has been received. Print out the result.
+	    resp.on('end', () => {
+	      //console.log("end:"+JSON.parse(data));
+	      //var  
+	      console.log("received from server:"+data);
+	      var jsonData= JSON.parse(data);
+	      console.log("received from server displayText:"+jsonData.displayText);
+	      return res.json({
+			    speech: jsonData.speech,
+			    displayText: jsonData.displayText,
+			    source: "webhook-echo-sample"
+		  });
+//	      
+	    });
+	    
+
+	  }).on("error", (err) => {
+	    console.log("Error: " + err.message);
+	  });
+	  
+	  //*****************************Working NON BASIC AUTH CODE END ************************
+	  
+	  
   }else{
 	  return res.json({
 	    speech: speech,
