@@ -240,7 +240,7 @@ restService.post("/echo", function(req, res) {
 	  const http = require('http');
 	  console.log("using id:"+process.env.myID);
 	  var path='';
-	  if(speech == 'switch on my porch light' || speech == 'switch off my porch light'){
+	  if(speech == 'switch on my porch light'){
 		  path= '/SampleLDAPWeb/HomeAutomation?action=PorchON';
 	  }else{
 		  path= '/SampleLDAPWeb/HomeAutomation?action=PorchOFF';
