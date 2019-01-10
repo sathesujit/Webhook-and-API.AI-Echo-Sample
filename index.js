@@ -71,14 +71,15 @@ function refreshKeys(){
 }
 
 restService.post("/echo", function(req, res) {
-  var speech =
-    req.body.result &&
-    req.body.result.parameters &&
-    req.body.result.parameters.echoText
-      ? req.body.result.parameters.echoText
-      : "Seems like some problem. Speak again please.";
+	var myObject = req.body.result.parameters.my-object;
+	var myAction = req.body.result.parameters.my-action;
+	var speech =	req.body.result &&
+					req.body.result.parameters &&
+					req.body.result.parameters.echoText
+					? req.body.result.parameters.echoText
+							: "Seems like some problem. Speak again please.";
   
-  if(speech.indexOf('thermostat') >= 0 && speech.indexOf('status') >= 0 ){
+  if(myObject.toUpperCase() == 'THERMOSTAT' && myAction.toUpperCase() =='STATUS' ){
   
 	  
 	  apikey = req.body.result.parameters.mykey;
