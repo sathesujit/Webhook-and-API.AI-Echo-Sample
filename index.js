@@ -174,7 +174,7 @@ restService.post("/echo", function(req, res) {
 	//	  });
 	  }
 	  
-  }else if(myObject.toUpperCase() == 'LIGHT1' ){
+  }else if(myObject.toUpperCase() == 'LIGHT1' || myObject.toUpperCase() == 'BOTH'){
 	  
 	  const http = require('http');
 	  console.log("using id:"+process.env.myID);
@@ -240,7 +240,7 @@ restService.post("/echo", function(req, res) {
 	  //*****************************Working NON BASIC AUTH CODE END ************************
 	  
 	  
-  }else if(myObject.toUpperCase() == 'LIGHT2' ){
+  }else if(myObject.toUpperCase() == 'LIGHT2' || myObject.toUpperCase() == 'BOTH' ){
 	  
 	  const http = require('http');
 	  console.log("using id:"+process.env.myID);
