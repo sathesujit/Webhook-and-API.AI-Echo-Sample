@@ -78,7 +78,8 @@ restService.post("/echo", function(req, res) {
 					req.body.result.parameters.echoText
 					? req.body.result.parameters.echoText
 							: "Seems like some problem. Speak again please.";
-  
+	  console.log("myObject:"+myObject);
+	  console.log("myAction:"+myAction);
   if(myObject.toUpperCase() == 'THERMOSTAT' && myAction.toUpperCase() =='STATUS' ){
   
 	  
