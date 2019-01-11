@@ -307,6 +307,7 @@ restService.post("/echo", function(req, res) {
 	  
 	  
   }else{
+	  console.log("returning in else block");
 	  return res.json({
 	    speech: speech,
 	    displayText: speech,
