@@ -245,7 +245,7 @@ restService.post("/echo", function(req, res) {
   } 
   if(myObject.toUpperCase() == 'LIGHT2' || myObject.toUpperCase() == 'BOTH' ){
 	  
-	  const http = require('http');
+	  const http2 = require('http');
 	  console.log("using id:"+process.env.myID);
 	  var path='';
 	  if(myAction.toUpperCase() == 'ON'){
@@ -284,7 +284,7 @@ restService.post("/echo", function(req, res) {
 	  
 	  //*****************************Working NON BASIC AUTH CODE START ************************
 
-	  http.get(options, (resp) => {
+	  http2.get(options, (resp) => {
 	    let data = '';
 
 	    // A chunk of data has been recieved.
