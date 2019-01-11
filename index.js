@@ -224,11 +224,13 @@ restService.post("/echo", function(req, res) {
 	      console.log("received from server:"+data);
 	      var jsonData= JSON.parse(data);
 	      console.log("received from server displayText:"+jsonData.displayText);
-	      return res.json({
-			    speech: jsonData.speech,
-			    displayText: jsonData.displayText,
-			    source: "webhook-echo-sample"
-		  });
+	      if(myObject.toUpperCase() != 'BOTH'){
+		      return res.json({
+				    speech: jsonData.speech,
+				    displayText: jsonData.displayText,
+				    source: "webhook-echo-sample"
+			  });
+	      }
 //	      
 	    });
 	    
@@ -297,6 +299,9 @@ restService.post("/echo", function(req, res) {
 	      console.log("received from server:"+data);
 	      var jsonData= JSON.parse(data);
 	      console.log("received from server displayText:"+jsonData.displayText);
+	      if(myObject.toUpperCase() == 'BOTH'){
+	    	  var returnString = 'I have switched '+myAction+' both the lights.'
+	      }
 	      return res.json({
 			    speech: jsonData.speech,
 			    displayText: jsonData.displayText,
