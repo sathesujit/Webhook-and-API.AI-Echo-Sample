@@ -281,6 +281,9 @@ restService.post("/echo", function(req, res) {
 	      console.log("received from server:"+data);
 	      var jsonData= JSON.parse(data);
 	      console.log("received from server displayText:"+jsonData.displayText);
+	      
+	      var returnString = jsonData.displayText;
+	      
 	      if(myObject.toUpperCase() == 'BOTH'){
 	    	  console.log("returning response for both lights");
 	    	  var returnString = 'I have switched '+myAction+' both the lights.'
@@ -288,8 +291,8 @@ restService.post("/echo", function(req, res) {
 	    	  console.log("returning response for light 2");
 	      }
 	      return res.json({
-			    speech: jsonData.speech,
-			    displayText: jsonData.displayText,
+			    speech: returnString,
+			    displayText: returnString,
 			    source: "webhook-echo-sample"
 		  });
 //	      
