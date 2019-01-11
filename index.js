@@ -174,14 +174,14 @@ restService.post("/echo", function(req, res) {
 	//	  });
 	  }
 	  
-  }else if(speech == 'switch my light'){
+  }else if(myObject.toUpperCase() == 'LIGHT1' ){
 	  
 	  const http = require('http');
 	  console.log("using id:"+process.env.myID);
 	  var options = {
 			   host: '73.185.136.87',
 			   port: 8081,
-			   path: '/SampleLDAPWeb/HomeAutomation?action=UpdateOffice',
+			   path: '/SampleLDAPWeb/HomeAutomation?action=UpdateOffice&Status='+myAction.toUpperCase(),
 			   // authentication headers
 			   headers: {
 			      'Authorization': 'Basic ' + new Buffer(process.env.myID + ':' + process.env.myPW).toString('base64')
@@ -240,12 +240,12 @@ restService.post("/echo", function(req, res) {
 	  //*****************************Working NON BASIC AUTH CODE END ************************
 	  
 	  
-  }else if(speech == 'switch on my porch light' || speech == 'switch off my porch light'){
+  }else if(myObject.toUpperCase() == 'LIGHT2' ){
 	  
 	  const http = require('http');
 	  console.log("using id:"+process.env.myID);
 	  var path='';
-	  if(speech == 'switch on my porch light'){
+	  if(myAction.toUpperCase() == 'ON'){
 		  path= '/SampleLDAPWeb/HomeAutomation?action=PorchON';
 	  }else{
 		  path= '/SampleLDAPWeb/HomeAutomation?action=PorchOFF';
