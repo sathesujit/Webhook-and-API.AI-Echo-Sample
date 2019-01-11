@@ -175,7 +175,7 @@ restService.post("/echo", function(req, res) {
 	  }
 	  
   }else if(myObject.toUpperCase() == 'LIGHT1' || myObject.toUpperCase() == 'BOTH'){
-	  
+	  console.log("entered first if "+myObject.toUpperCase());
 	  const http = require('http');
 	  console.log("using id:"+process.env.myID);
 	  var options = {
@@ -206,12 +206,12 @@ restService.post("/echo", function(req, res) {
 		      var jsonData= JSON.parse(data);
 		      console.log("received from server displayText:"+jsonData.displayText);
 		      if(myObject.toUpperCase() != 'BOTH'){
-		    	  console.log("not returning response for light 1");
-//			      return res.json({
-//					    speech: jsonData.speech,
-//					    displayText: jsonData.displayText,
-//					    source: "webhook-echo-sample"
-//				  });
+		    	  console.log("returning response for light 1");
+			      return res.json({
+					    speech: jsonData.speech,
+					    displayText: jsonData.displayText,
+					    source: "webhook-echo-sample"
+				  });
 		      }
 	//	      
 		    });
@@ -226,7 +226,7 @@ restService.post("/echo", function(req, res) {
 	  
   } 
   if(myObject.toUpperCase() == 'LIGHT2' || myObject.toUpperCase() == 'BOTH' ){
-	  
+	  console.log("entered "+myObject.toUpperCase());
 	  const http2 = require('http');
 	  console.log("using id:"+process.env.myID);
 	  var path='';
