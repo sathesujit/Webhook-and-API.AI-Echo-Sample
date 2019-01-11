@@ -187,57 +187,39 @@ restService.post("/echo", function(req, res) {
 			      'Authorization': 'Basic ' + new Buffer(process.env.myID + ':' + process.env.myPW).toString('base64')
 			   }   
 			};
-			//this is the call
-//			request = http.get(options, function(res){
-//			   var body = "";
-//			   res.on('data', function(data) {
-//			      body += data;
-//			   });
-//			   res.on('end', function() {
-//			    //here we have the full response, html or json object
-//			      console.log(body);
-//			   })
-//			   res.on('error', function(e) {
-//			      onsole.log("Got error: " + e.message);
-//			   });
-//			});
-			
 	  
-	  
-	  
-	  
-	  
-	  //*****************************Working NON BASIC AUTH CODE START ************************
-
-	  http.get(options, (resp) => {
-	    let data = '';
-
-	    // A chunk of data has been recieved.
-	    resp.on('data', (chunk) => {
-	      data += chunk;
-	    });
-
-	    // The whole response has been received. Print out the result.
-	    resp.on('end', () => {
-	      //console.log("end:"+JSON.parse(data));
-	      //var  
-	      console.log("received from server:"+data);
-	      var jsonData= JSON.parse(data);
-	      console.log("received from server displayText:"+jsonData.displayText);
-	      if(myObject.toUpperCase() != 'BOTH'){
-		      return res.json({
-				    speech: jsonData.speech,
-				    displayText: jsonData.displayText,
-				    source: "webhook-echo-sample"
-			  });
-	      }
-//	      
-	    });
-	    
-
-	  }).on("error", (err) => {
-	    console.log("Error: " + err.message);
-	  });
+		  //*****************************Working NON BASIC AUTH CODE START ************************
+	
+		  http.get(options, (resp) => {
+		    let data = '';
+	
+		    // A chunk of data has been recieved.
+		    resp.on('data', (chunk) => {
+		      data += chunk;
+		    });
+	
+		    // The whole response has been received. Print out the result.
+		    resp.on('end', () => {
+		      //console.log("end:"+JSON.parse(data));
+		      //var  
+		      console.log("received from server:"+data);
+		      var jsonData= JSON.parse(data);
+		      console.log("received from server displayText:"+jsonData.displayText);
+		      if(myObject.toUpperCase() != 'BOTH'){
+		    	  console.log("returning response for light 1");
+			      return res.json({
+					    speech: jsonData.speech,
+					    displayText: jsonData.displayText,
+					    source: "webhook-echo-sample"
+				  });
+		      }
+	//	      
+		    });
+		    
+	
+		  }).on("error", (err) => {
+		    console.log("Error: " + err.message);
+		  });
 	  
 	  //*****************************Working NON BASIC AUTH CODE END ************************
 	  
@@ -300,7 +282,10 @@ restService.post("/echo", function(req, res) {
 	      var jsonData= JSON.parse(data);
 	      console.log("received from server displayText:"+jsonData.displayText);
 	      if(myObject.toUpperCase() == 'BOTH'){
+	    	  console.log("returning response for both lights");
 	    	  var returnString = 'I have switched '+myAction+' both the lights.'
+	      }else{
+	    	  console.log("returning response for light 2");
 	      }
 	      return res.json({
 			    speech: jsonData.speech,
