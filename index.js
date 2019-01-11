@@ -240,7 +240,8 @@ restService.post("/echo", function(req, res) {
 	  //*****************************Working NON BASIC AUTH CODE END ************************
 	  
 	  
-  }else if(myObject.toUpperCase() == 'LIGHT2' || myObject.toUpperCase() == 'BOTH' ){
+  } 
+  if(myObject.toUpperCase() == 'LIGHT2' || myObject.toUpperCase() == 'BOTH' ){
 	  
 	  const http = require('http');
 	  console.log("using id:"+process.env.myID);
