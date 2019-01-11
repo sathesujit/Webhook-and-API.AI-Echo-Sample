@@ -181,7 +181,7 @@ restService.post("/echo", function(req, res) {
 	  var options = {
 			   host: '73.185.136.87',
 			   port: 8081,
-			   path: '/SampleLDAPWeb/HomeAutomation?action=UpdateOffice&Status='+myAction.toUpperCase(),
+			   path: '/SampleLDAPWeb/HomeAutomation?action=UpdateOffice&status='+myAction.toUpperCase(),
 			   // authentication headers
 			   headers: {
 			      'Authorization': 'Basic ' + new Buffer(process.env.myID + ':' + process.env.myPW).toString('base64')
