@@ -72,10 +72,10 @@ function refreshKeys(){
 
 restService.post("/echo", function(req, res) {
 	
-	console.log("myObject:"+req.body.result.parameters);
-	console.log("myObject:"+req.body.result.parameters.my-object);
-	var myObject = req.body.result.parameters.my-object;
-	var myAction = req.body.result.parameters.my-action;
+	console.log("myObject :"+req.body.result.parameters);
+	console.log("myObject :"+req.body.result.parameters.myObject);
+	var myObject = req.body.result.parameters.myObject;
+	var myAction = req.body.result.parameters.myAction;
 	var speech =	req.body.result &&
 					req.body.result.parameters &&
 					req.body.result.parameters.echoText
