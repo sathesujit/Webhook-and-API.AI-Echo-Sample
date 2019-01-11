@@ -206,12 +206,12 @@ restService.post("/echo", function(req, res) {
 		      var jsonData= JSON.parse(data);
 		      console.log("received from server displayText:"+jsonData.displayText);
 		      if(myObject.toUpperCase() != 'BOTH'){
-		    	  console.log("returning response for light 1");
-			      return res.json({
-					    speech: jsonData.speech,
-					    displayText: jsonData.displayText,
-					    source: "webhook-echo-sample"
-				  });
+		    	  console.log("not returning response for light 1");
+//			      return res.json({
+//					    speech: jsonData.speech,
+//					    displayText: jsonData.displayText,
+//					    source: "webhook-echo-sample"
+//				  });
 		      }
 	//	      
 		    });
