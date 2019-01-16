@@ -203,6 +203,7 @@ restService.post("/echo", function(req, res) {
 		      //console.log("end:"+JSON.parse(data));
 		      //var  
 		      console.log("received from server:"+data);
+		      //data = "{\"speech\":\"I have switched on your fancy light.\",\"displayText\":\"I have switchedon your fancy light.\",\"source\":\"webhook-echo-sample\"}";
 		      var jsonData= JSON.parse(data);
 		      console.log("received from server displayText:"+jsonData.displayText);
 		      if(myObject.toUpperCase() != 'BOTH'){
@@ -279,6 +280,8 @@ restService.post("/echo", function(req, res) {
 	      //console.log("end:"+JSON.parse(data));
 	      //var  
 	      console.log("received from server:"+data);
+	      
+	      //data = "{\"speech\":\"I have switched on your fancy light.\",\"displayText\":\"I have switchedon your fancy light.\",\"source\":\"webhook-echo-sample\"}";
 	      var jsonData= JSON.parse(data);
 	      console.log("received from server displayText:"+jsonData.displayText);
 	      
@@ -307,12 +310,12 @@ restService.post("/echo", function(req, res) {
 	  
 	  
   }else{
-	  console.log("returning in else block");
-	  return res.json({
-	    speech: speech,
-	    displayText: speech,
-	    source: "webhook-echo-sample"
-	  });
+//	  console.log("returning in else block");
+//	  return res.json({
+//	    speech: speech,
+//	    displayText: speech,
+//	    source: "webhook-echo-sample"
+//	  });
   }
 });
 
