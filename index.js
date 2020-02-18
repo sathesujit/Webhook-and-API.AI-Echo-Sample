@@ -418,7 +418,13 @@ restService.post("/reservationStatus", function(req, res) {
 	  var customerName = req.body.queryResult.parameters.customerName;
 	  
 	  speech = "Reservation for site "+siteID+" and customer "+customerName+" is approved";
-	  return '{"fulfillmentText": "This is a text response",  "fulfillmentMessages": [    {      "card": {}    }  ],  "source": "webhook-echo-sample",  "payload": {    "google": {      "expectUserResponse": true,      "richResponse": {        "items": [          {            "simpleResponse": {              "textToSpeech": "this is a simple response"            }          }        ]      }    },    "facebook": {      "text": "Hello, Facebook!"    },    "slack": {      "text": "This is a text response for Slack."    }  },  "outputContexts": [    {      "name": "projects/project-id/agent/sessions/session-id/contexts/context-name",      "lifespanCount": 5,      "parameters": {        "param-name": "param-value"      }    }  ],  "followupEventInput": {    "name": "event name",    "languageCode": "en-US",    "parameters": {      "param-name": "param-value"    }  }}';
+	  var resp =  '{"fulfillmentText": "This is a text response",  "fulfillmentMessages": [    {      "card": {}    }  ],  "source": "webhook-echo-sample",  "payload": {    "google": {      "expectUserResponse": true,      "richResponse": {        "items": [          {            "simpleResponse": {              "textToSpeech": "this is a simple response"            }          }        ]      }    },    "facebook": {      "text": "Hello, Facebook!"    },    "slack": {      "text": "This is a text response for Slack."    }  },  "outputContexts": [    {      "name": "projects/project-id/agent/sessions/session-id/contexts/context-name",      "lifespanCount": 5,      "parameters": {        "param-name": "param-value"      }    }  ],  "followupEventInput": {    "name": "event name",    "languageCode": "en-US",    "parameters": {      "param-name": "param-value"    }  }}';
+	  return res.json({
+		  	fulfillmentText: speech,
+		  	fulfillmentMessages: speech,
+		  	payload: '{    "google": {      "expectUserResponse": true,      "richResponse": {        "items": [          {            "simpleResponse": {              "textToSpeech": "this is a simple response"            }          }        ]      }    },    "facebook": {      "text": "Hello, Facebook!"    },    "slack": {      "text": "This is a text response for Slack."    }  }',
+		    source: "webhook-echo-sample"
+		  });
 });
 
 
