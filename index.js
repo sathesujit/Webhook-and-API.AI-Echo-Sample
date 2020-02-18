@@ -72,28 +72,28 @@ function refreshKeys(){
 
 restService.post("/echo", function(req, res) {
 	
-	console.log("myObject :"+req.body.result.parameters);
-	console.log("myObject :"+req.body.result.parameters.myObject);
-	var myObject = req.body.result.parameters.myObject;
-	var myAction = req.body.result.parameters.myAction;
-	var speech =	req.body.result &&
-					req.body.result.parameters &&
-					req.body.result.parameters.echoText
-					? req.body.result.parameters.echoText
+	console.log("myObject :"+req.body.queryResult.parameters);
+	console.log("myObject :"+req.body.queryResult.parameters.myObject);
+	var myObject = req.body.queryResult.parameters.myObject;
+	var myAction = req.body.queryResult.parameters.myAction;
+	var speech =	req.body.queryResult &&
+					req.body.queryResult.parameters &&
+					req.body.queryResult.parameters.echoText
+					? req.body.queryResult.parameters.echoText
 							: "Seems like some problem. Speak again please.";
 	  console.log("myObject:"+myObject);
 	  console.log("myAction:"+myAction);
   if(myObject.toUpperCase() == 'THERMOSTAT' && myAction.toUpperCase() =='STATUS' ){
   
 	  
-	  apikey = req.body.result.parameters.mykey;
+	  apikey = req.body.queryResult.parameters.mykey;
 	  //console.log("apikey:"+apikey);
 
 	  console.log("accesskey:"+accesskey);
 	  console.log("refresh_token:"+refresh_token);
 	  
 	  if(refresh_token ==''){
-		  //refresh_token = req.body.result.parameters.refreshtoken;
+		  //refresh_token = req.body.queryResult.parameters.refreshtoken;
 		  //console.log("refresh_token from request:"+refresh_token);
 		  refreshKeys();
 		  refreshTimerStart();
@@ -321,7 +321,7 @@ restService.post("/echo", function(req, res) {
 
 restService.post("/audio", function(req, res) {
   var speech = "";
-  switch (req.body.result.parameters.AudioSample.toLowerCase()) {
+  switch (req.body.queryResult.parameters.AudioSample.toLowerCase()) {
     //Speech Synthesis Markup Language 
     case "music one":
       speech =
@@ -411,6 +411,21 @@ restService.post("/audio", function(req, res) {
     source: "webhook-echo-sample"
   });
 });
+
+restService.post("/reservationStatus", function(req, res) {
+	  var speech = "";
+	  var siteID = req.body.queryResult.parameters.siteID;
+	  var customerName = req.body.queryResult.parameters.customerName;
+	  
+	  speech = "Reservation for site "+siteID+" and customer "+customerName+" is approved";
+	  return res.json({
+		    speech: speech,
+		    displayText: speech,
+		    source: "webhook-echo-sample"
+	  });
+});
+
+
 
 restService.post("/video", function(req, res) {
   return res.json({
